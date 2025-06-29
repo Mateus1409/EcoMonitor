@@ -148,7 +148,7 @@ curl -X POST "http://localhost:8080/api/relatorios/gerar" \
   --output relatorio.pdf
 ```
 
-## 📊 Sistema de Relatórios (NOVO!)
+## 📊 Sistema de Relatórios 
 
 ### Funcionalidades
 - **Geração de Relatórios**: PDF, Excel e CSV
