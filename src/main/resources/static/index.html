@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#007bff">
+    <meta name="msapplication-TileColor" content="#007bff">
+    <meta name="msapplication-TileImage" content="favicon.svg">
+    <title>EcoMonitor - Sistema de Monitoramento de Economia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="logo.svg" alt="EcoMonitor Logo" height="40" class="me-3">
+                <div>
+                    <div class="brand-title">EcoMonitor</div>
+                    <div class="brand-subtitle">Sistema de Monitoramento</div>
+                </div>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <button class="btn btn-outline-light btn-sm me-2" onclick="alternarTema()">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn btn-outline-light btn-sm" onclick="atualizarKPIs()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Cards dos Módulos -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card module-card lean-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cogs fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Módulo Lean</h5>
+                        <p class="card-text">Otimização de processos e redução de desperdícios</p>
+                        <button class="btn btn-success" onclick="selecionarModulo('LEAN')">
+                            <i class="fas fa-eye me-2"></i>Visualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card module-card circular-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-recycle fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">Módulo Circular</h5>
+                        <p class="card-text">Reutilização de recursos e economia circular</p>
+                        <button class="btn btn-info" onclick="selecionarModulo('CIRCULAR')">
+                            <i class="fas fa-eye me-2"></i>Visualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card module-card sustentavel-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Módulo Sustentável</h5>
+                        <p class="card-text">Energia renovável e práticas sustentáveis</p>
+                        <button class="btn btn-success" onclick="selecionarModulo('SUSTENTAVEL')">
+                            <i class="fas fa-eye me-2"></i>Visualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard KPIs em Tempo Real -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="fas fa-tachometer-alt me-2"></i>Dashboard - KPIs em Tempo Real</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="alternarTema()">
+                                <i class="fas fa-moon me-1"></i>Modo Escuro
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="atualizarKPIs()">
+                                <i class="fas fa-sync-alt me-1"></i>Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="kpi-card bg-primary text-white">
+                                    <div class="kpi-icon">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div class="kpi-content">
+                                        <h3 id="kpiConsumoTotal">0 kWh</h3>
+                                        <p>Consumo Total (24h)</p>
+                                        <small id="kpiConsumoVariacao">+0%</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="kpi-card bg-success text-white">
+                                    <div class="kpi-icon">
+                                        <i class="fas fa-percentage"></i>
+                                    </div>
+                                    <div class="kpi-content">
+                                        <h3 id="kpiEficienciaMedia">0%</h3>
+                                        <p>Eficiência Média</p>
+                                        <small id="kpiEficienciaVariacao">+0%</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="kpi-card bg-warning text-white">
+                                    <div class="kpi-icon">
+                                        <i class="fas fa-thermometer-half"></i>
+                                    </div>
+                                    <div class="kpi-content">
+                                        <h3 id="kpiTemperaturaMedia">0°C</h3>
+                                        <p>Temperatura Média</p>
+                                        <small id="kpiTemperaturaVariacao">+0°C</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="kpi-card bg-info text-white">
+                                    <div class="kpi-icon">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                    <div class="kpi-content">
+                                        <h3 id="kpiMaquinasAtivas">0</h3>
+                                        <p>Máquinas Ativas</p>
+                                        <small id="kpiMaquinasStatus">Online</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Alertas e Status -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div id="areaAlertas" class="alert-container">
+                                    <!-- Alertas serão inseridos aqui via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Controle -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-gamepad me-2"></i>Painel de Controle</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Simulação Arduino</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Módulo:</label>
+                                    <select id="moduloSimulacao" class="form-select">
+                                        <option value="LEAN">Lean</option>
+                                        <option value="CIRCULAR">Circular</option>
+                                        <option value="SUSTENTAVEL">Sustentável</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Nome da Máquina:</label>
+                                    <input type="text" id="nomeMaquina" class="form-control" placeholder="Ex: Máquina 001">
+                                </div>
+                                <button class="btn btn-primary" onclick="simularDadosArduino()">
+                                    <i class="fas fa-play me-2"></i>Simular Dados
+                                </button>
+                                <button class="btn btn-warning" onclick="iniciarSimulacaoAutomatica()">
+                                    <i class="fas fa-sync-alt me-2"></i>Simulação Automática
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Entrada Manual</h6>
+                                <form id="formManual">
+                                    <div class="mb-3">
+                                        <label class="form-label">Módulo:</label>
+                                        <select id="moduloManual" class="form-select" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="LEAN">Lean</option>
+                                            <option value="CIRCULAR">Circular</option>
+                                            <option value="SUSTENTAVEL">Sustentável</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nome da Máquina:</label>
+                                        <input type="text" id="nomeMaquinaManual" class="form-control" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-label">Consumo Energia (kWh):</label>
+                                            <input type="number" id="consumoEnergia" class="form-control" step="0.1" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Temperatura (°C):</label>
+                                            <input type="number" id="temperatura" class="form-control" step="0.1" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Pressão (bar):</label>
+                                            <input type="number" id="pressao" class="form-control" step="0.1" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Velocidade (RPM):</label>
+                                            <input type="number" id="velocidade" class="form-control" step="0.1" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-2">
+                                        <label class="form-label">Eficiência (%):</label>
+                                        <input type="number" id="eficiencia" class="form-control" step="0.1" min="0" max="100" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save me-2"></i>Salvar Dados
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="fas fa-chart-bar me-2"></i>Gráficos de Monitoramento</h5>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="atualizarGraficos()">
+                                <i class="fas fa-sync-alt me-1"></i>Atualizar
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="limparDados()">
+                                <i class="fas fa-trash me-1"></i>Limpar Dados
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <canvas id="graficoConsumo"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="graficoTemperatura"></canvas>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <canvas id="graficoEficiencia"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="graficoComparativo"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Gráfico de Tendências Temporais -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6><i class="fas fa-chart-line me-2"></i>Análise de Tendências Temporais</h6>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button class="btn btn-outline-primary active" onclick="alterarPeriodoTendencias('24h')">24h</button>
+                                            <button class="btn btn-outline-primary" onclick="alterarPeriodoTendencias('7d')">7d</button>
+                                            <button class="btn btn-outline-primary" onclick="alterarPeriodoTendencias('30d')">30d</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="graficoTendencias"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Dados -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-table me-2"></i>Dados Recentes</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Filtros Avançados -->
+                        <div class="row mb-3">
+                            <div class="col-md-2">
+                                <label class="form-label">Módulo:</label>
+                                <select id="filtroModulo" class="form-select form-select-sm">
+                                    <option value="">Todos</option>
+                                    <option value="LEAN">Lean</option>
+                                    <option value="CIRCULAR">Circular</option>
+                                    <option value="SUSTENTAVEL">Sustentável</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Máquina:</label>
+                                <input type="text" id="filtroMaquina" class="form-control form-control-sm" placeholder="Nome da máquina">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Data Inicial:</label>
+                                <input type="datetime-local" id="filtroDataInicial" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Data Final:</label>
+                                <input type="datetime-local" id="filtroDataFinal" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Ordenar por:</label>
+                                <select id="filtroOrdenacao" class="form-select form-select-sm">
+                                    <option value="timestamp">Data/Hora</option>
+                                    <option value="consumoEnergia">Consumo</option>
+                                    <option value="eficiencia">Eficiência</option>
+                                    <option value="temperatura">Temperatura</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <div class="btn-group w-100" role="group">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="aplicarFiltros()">
+                                        <i class="fas fa-filter me-1"></i>Filtrar
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="limparFiltros()">
+                                        <i class="fas fa-times me-1"></i>Limpar
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success" onclick="exportarDadosFiltrados()">
+                                        <i class="fas fa-download me-1"></i>Exportar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Módulo</th>
+                                        <th>Máquina</th>
+                                        <th>Consumo (kWh)</th>
+                                        <th>Temperatura (°C)</th>
+                                        <th>Pressão (bar)</th>
+                                        <th>Velocidade (RPM)</th>
+                                        <th>Eficiência (%)</th>
+                                        <th>Data/Hora</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaDados">
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Paginação -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    Mostrando <span id="registrosMostrados">0</span> de <span id="totalRegistros">0</span> registros
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <nav aria-label="Navegação de páginas">
+                                    <ul class="pagination pagination-sm justify-content-end" id="paginacao">
+                                        <!-- Paginação será gerada via JavaScript -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Relatórios -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-file-alt me-2"></i>Relatórios e Estatísticas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-chart-pie me-2"></i>Gerar Relatório</h6>
+                                <form id="formRelatorio">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-label">Data Inicial:</label>
+                                            <input type="date" id="dataInicial" class="form-control" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Data Final:</label>
+                                            <input type="date" id="dataFinal" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Módulo (opcional):</label>
+                                            <select id="moduloRelatorio" class="form-select">
+                                                <option value="">Todos os módulos</option>
+                                                <option value="LEAN">Lean</option>
+                                                <option value="CIRCULAR">Circular</option>
+                                                <option value="SUSTENTAVEL">Sustentável</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Máquina (opcional):</label>
+                                            <input type="text" id="maquinaRelatorio" class="form-control" placeholder="Nome da máquina">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Formato:</label>
+                                            <select id="formatoRelatorio" class="form-select" required>
+                                                <option value="PDF">PDF</option>
+                                                <option value="EXCEL">Excel</option>
+                                                <option value="CSV">CSV</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 d-flex align-items-end">
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fas fa-download me-2"></i>Gerar Relatório
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="fas fa-chart-line me-2"></i>Estatísticas Rápidas</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-info w-100 mb-2" onclick="obterEstatisticas()">
+                                            <i class="fas fa-calculator me-2"></i>Ver Estatísticas
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-success w-100 mb-2" onclick="obterResumoExecutivo()">
+                                            <i class="fas fa-chart-bar me-2"></i>Resumo Executivo
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button class="btn btn-outline-warning w-100" onclick="downloadCSVRapido()">
+                                            <i class="fas fa-file-csv me-2"></i>Download CSV Rápido
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Área de Estatísticas -->
+                                <div id="areaEstatisticas" class="mt-3" style="display: none;">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Estatísticas do Período</h6>
+                                            <div id="conteudoEstatisticas">
+                                                <!-- Conteúdo será preenchido via JavaScript -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast para notificações -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert">
+            <div class="toast-header">
+                <strong class="me-auto">Sistema</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
